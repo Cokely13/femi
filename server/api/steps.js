@@ -6,7 +6,11 @@ module.exports = router;
 
 router.get("/", async (req, res, next) => {
   try {
-    const steps = await Step.findAll({ include: [User] });
+    const where = {};
+    if (req.query.userId) {
+      where.userId = req.query.userId;
+    }
+    const steps = await Step.findAll({ where, include: [User] });
     res.json(steps);
   } catch (err) {
     next(err);

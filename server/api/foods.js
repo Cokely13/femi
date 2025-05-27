@@ -6,7 +6,11 @@ module.exports = router;
 
 router.get("/", async (req, res, next) => {
   try {
-    const foods = await Food.findAll({ include: [User] });
+    const where = {};
+    if (req.query.userId) {
+      where.userId = req.query.userId;
+    }
+    const foods = await Food.findAll({ where, include: [User] });
     res.json(foods);
   } catch (err) {
     next(err);

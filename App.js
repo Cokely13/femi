@@ -39,6 +39,7 @@ import WelcomeScreen from "./app/screen/WelcomeScreen";
 import StepsScreen from "./app/screen/StepsScreen";
 import FoodScreen from "./app/screen/FoodScreen";
 import SleepScreen from "./app/screen/SleepScreen";
+import EnterInfoScreen from "./app/screen/EnterInfoScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +51,7 @@ export default function App() {
         <Stack.Screen name="Steps" component={StepsScreen} />
         <Stack.Screen name="Food" component={FoodScreen} />
         <Stack.Screen name="Sleep" component={SleepScreen} />
+        <Stack.Screen name="EnterInfo" component={EnterInfoScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
