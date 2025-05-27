@@ -8,8 +8,12 @@ const Sleep = db.define("sleep", {
     allowNull: false,
   },
   quality: {
-    type: DataTypes.ENUM("poor", "average", "good"),
+    type: DataTypes.INTEGER,
     allowNull: false,
+    validate: {
+      min: 1,
+      max: 10,
+    },
   },
   time: {
     type: DataTypes.INTEGER,

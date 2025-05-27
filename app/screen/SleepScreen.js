@@ -1,11 +1,134 @@
-// app/screen/SleepScreen.js
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+// // app/screen/SleepScreen.js
+// import React, { useEffect, useState } from "react";
+// import { View, Text, StyleSheet, FlatList } from "react-native";
 
-export default function SleepScreen() {
+// export default function SleepScreen() {
+//   const [sleepData, setSleepData] = useState([]);
+//   const [averageQuality, setAverageQuality] = useState(0);
+//   const [averageTime, setAverageTime] = useState(0);
+
+//   const BASE_URL = "http://192.168.1.166:8080"; // ⬅️ Replace with local IP on device
+
+//   useEffect(() => {
+//     const fetchSleepData = async () => {
+//       try {
+//         const userId = 1; // <- Replace with dynamic value later
+//         const res = await fetch(`${BASE_URL}/api/sleeps?userId=${userId}`);
+//         const data = await res.json();
+
+//         // Filter last 7 days
+//         const today = new Date();
+//         const lastWeek = data.filter((entry) => {
+//           const entryDate = new Date(entry.date);
+//           const diff = (today - entryDate) / (1000 * 60 * 60 * 24);
+//           return diff <= 7;
+//         });
+
+//         // Calculate averages
+//         const totalQuality = lastWeek.reduce((sum, s) => sum + s.quality, 0);
+//         const totalTime = lastWeek.reduce((sum, s) => sum + s.time, 0);
+//         const count = lastWeek.length;
+
+//         setSleepData(lastWeek);
+//         setAverageQuality(count ? (totalQuality / count).toFixed(1) : 0);
+//         setAverageTime(count ? (totalTime / count).toFixed(1) : 0);
+//       } catch (err) {
+//         console.error("Failed to fetch sleep data:", err);
+//       }
+//     };
+
+//     fetchSleepData();
+//   }, []);
+
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.header}>Sleep (Last 7 Days)</Text>
+//       <Text style={styles.summary}>Average Quality: {averageQuality} / 10</Text>
+//       <Text style={styles.summary}>Average Time: {averageTime} hrs</Text>
+
+//       <FlatList
+//         data={sleepData}
+//         keyExtractor={(item) => item.id.toString()}
+//         renderItem={({ item }) => (
+//           <Text style={styles.item}>
+//             {item.date}: {item.time} hrs | Quality: {item.quality}/10
+//           </Text>
+//         )}
+//       />
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     paddingTop: 60,
+//     paddingHorizontal: 20,
+//     backgroundColor: "#e6f7ff",
+//   },
+//   header: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//   },
+//   summary: {
+//     fontSize: 18,
+//     marginBottom: 5,
+//   },
+//   item: {
+//     fontSize: 16,
+//     marginVertical: 4,
+//     borderBottomWidth: 1,
+//     borderBottomColor: "#ccc",
+//     paddingBottom: 4,
+//   },
+// });
+
+// app/screen/SleepScreen.js
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
+
+export default function SleepScreen({ route }) {
+  const rawSleepData = route.params?.sleep || [];
+
+  const [sleepData, setSleepData] = useState([]);
+  const [averageQuality, setAverageQuality] = useState(0);
+  const [averageTime, setAverageTime] = useState(0);
+
+  useEffect(() => {
+    // Filter last 7 days
+    const today = new Date();
+    const lastWeek = rawSleepData.filter((entry) => {
+      const entryDate = new Date(entry.date);
+      const diff = (today - entryDate) / (1000 * 60 * 60 * 24);
+      return diff <= 7;
+    });
+
+    // Calculate averages
+    const totalQuality = lastWeek.reduce((sum, s) => sum + s.quality, 0);
+    const totalTime = lastWeek.reduce((sum, s) => sum + s.time, 0);
+    const count = lastWeek.length;
+
+    setSleepData(lastWeek);
+    setAverageQuality(count ? (totalQuality / count).toFixed(1) : 0);
+    setAverageTime(count ? (totalTime / count).toFixed(1) : 0);
+  }, [rawSleepData]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Sleep Screen</Text>
+      <Text style={styles.header}>Sleep (Last 7 Days)</Text>
+      <Text style={styles.summary}>Average Quality: {averageQuality} / 10</Text>
+      <Text style={styles.summary}>Average Time: {averageTime} hrs</Text>
+
+      <FlatList
+        data={sleepData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Text style={styles.item}>
+            {item.date}: {item.time} hrs | Quality: {item.quality}/10
+          </Text>
+        )}
+      />
     </View>
   );
 }
@@ -13,10 +136,24 @@ export default function SleepScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    backgroundColor: "#e6f7ff",
   },
-  text: {
+  header: {
     fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  summary: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  item: {
+    fontSize: 16,
+    marginVertical: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingBottom: 4,
   },
 });

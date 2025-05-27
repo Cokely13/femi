@@ -11,6 +11,8 @@ const daysAgo = (n) => {
   return d.toISOString().split("T")[0]; // Format: YYYY-MM-DD
 };
 
+const randomRating = () => Math.floor(1 + Math.random() * 10); // 1–10
+
 async function seed() {
   await db.sync({ force: true });
   console.log("🔄 db synced");
@@ -22,7 +24,11 @@ async function seed() {
       email: "alice@example.com",
       password: "123",
     }),
-    User.create({ username: "Bob", email: "bob@example.com", password: "123" }),
+    User.create({
+      username: "Bob",
+      email: "bob@example.com",
+      password: "123",
+    }),
   ]);
 
   const users = [alice, bob];
@@ -31,23 +37,24 @@ async function seed() {
   for (const user of users) {
     for (let i = 0; i < 5; i++) {
       const date = daysAgo(i);
+
       await Step.create({
         date,
-        value: Math.floor(4000 + Math.random() * 6000),
+        value: Math.floor(4000 + Math.random() * 6000), // 4000–9999
         userId: user.id,
       });
 
       await Food.create({
         date,
-        healthy: ["poor", "average", "good"][Math.floor(Math.random() * 3)],
-        portion: ["poor", "average", "good"][Math.floor(Math.random() * 3)],
+        healthy: randomRating(), // 1–10
+        portion: randomRating(), // 1–10
         userId: user.id,
       });
 
       await Sleep.create({
         date,
-        quality: ["poor", "average", "good"][Math.floor(Math.random() * 3)],
-        time: Math.floor(5 + Math.random() * 3), // e.g. 5–8 hours
+        quality: randomRating(), // 1–10
+        time: Math.floor(5 + Math.random() * 3), // 5–7 hours
         userId: user.id,
       });
     }

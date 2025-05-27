@@ -6,7 +6,12 @@ module.exports = router;
 
 router.get("/", async (req, res, next) => {
   try {
-    const sleeps = await Sleep.findAll({ include: [User] });
+    const where = {};
+    if (req.query.userId) {
+      where.userId = req.query.userId;
+    }
+
+    const sleeps = await Sleep.findAll({ where, include: [User] });
     res.json(sleeps);
   } catch (err) {
     next(err);
