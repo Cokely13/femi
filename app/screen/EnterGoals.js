@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,6 @@ import {
   Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchGoals, postGoal } from "../store/goalsStore";
 
 const categories = [
   "App Development",
@@ -30,18 +28,27 @@ const categories = [
 
 const frequencies = ["Daily", "Weekdays", "Weekends", "Weekly", "One-Time"];
 
-export default function EnterGoals({ route }) {
+export default function EnterGoals({ route, navigation }) {
   const { userId, BASE_URL } = route.params;
-  const dispatch = useDispatch();
-  const goals = useSelector((state) => state.goals);
 
   const [category, setCategory] = useState(categories[0]);
   const [minutes, setMinutes] = useState("");
   const [frequency, setFrequency] = useState(frequencies[0]);
+  const [existingGoals, setExistingGoals] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchGoals(userId, BASE_URL));
-  }, [dispatch]);
+    fetchGoals();
+  }, []);
+
+  const fetchGoals = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/goals?userId=${userId}`);
+      const data = await res.json();
+      setExistingGoals(data);
+    } catch (err) {
+      console.error("Failed to fetch goals", err);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!minutes) {
@@ -49,7 +56,7 @@ export default function EnterGoals({ route }) {
       return;
     }
 
-    const goal = {
+    const newGoal = {
       category,
       targetMinutes: parseInt(minutes),
       frequency,
@@ -57,13 +64,22 @@ export default function EnterGoals({ route }) {
     };
 
     try {
-      await dispatch(postGoal(goal, BASE_URL));
+      const res = await fetch(`${BASE_URL}/api/goals`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newGoal),
+      });
+
+      if (!res.ok) throw new Error("Failed to save goal");
+
       setMinutes("");
       setCategory(categories[0]);
       setFrequency(frequencies[0]);
+
+      await fetchGoals(); // refresh list
       Alert.alert("Success", "Goal saved!");
     } catch (err) {
-      console.error("Goal save failed:", err);
+      console.error("Failed to save goal", err);
       Alert.alert("Error", "Could not save goal.");
     }
   };
@@ -108,7 +124,7 @@ export default function EnterGoals({ route }) {
       </View>
 
       <Text style={styles.header}>Your Goals</Text>
-      {goals.map((goal) => (
+      {existingGoals.map((goal) => (
         <Text key={goal.id} style={styles.goalItem}>
           📌 {goal.category} – {goal.targetMinutes} mins ({goal.frequency})
         </Text>
