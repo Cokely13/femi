@@ -6,6 +6,8 @@ const Sleep = require("./models/Sleep");
 const Step = require("./models/Step");
 const Food = require("./models/Food");
 const User = require("./models/User");
+const Goal = require("./models/Goal");
+const GoalRating = require("./models/GoalRating");
 
 //associations could go here!
 User.hasMany(Step);
@@ -16,6 +18,14 @@ Food.belongsTo(User);
 
 User.hasMany(Sleep);
 Sleep.belongsTo(User);
+User.hasMany(Goal);
+Goal.belongsTo(User);
+
+User.hasMany(GoalRating);
+GoalRating.belongsTo(User);
+
+Goal.hasMany(GoalRating);
+GoalRating.belongsTo(Goal);
 
 module.exports = {
   db,
@@ -24,5 +34,7 @@ module.exports = {
     Sleep,
     Step,
     User,
+    Goal,
+    GoalRating,
   },
 };
