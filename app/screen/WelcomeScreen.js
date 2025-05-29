@@ -146,6 +146,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import GoalTimerCircle from "./GoalTimerCircle";
 import {
   Text,
   StyleSheet,
@@ -251,6 +252,14 @@ function WelcomeScreen({ navigation }) {
           }
         >
           <Text style={styles.buttonText}>Enter or View Goals</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#6a5acd" }]}
+          onPress={() =>
+            navigation.navigate("TodayGoals", { userId, BASE_URL })
+          }
+        >
+          <Text style={styles.buttonText}>Start Today's Goals</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

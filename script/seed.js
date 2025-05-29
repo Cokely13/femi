@@ -2,7 +2,7 @@
 
 const {
   db,
-  models: { User, Step, Food, Sleep },
+  models: { User, Step, Food, Sleep, Goal, GoalRating },
 } = require("../server/db");
 
 const daysAgo = (n) => {
@@ -59,6 +59,28 @@ async function seed() {
       });
     }
   }
+  await Promise.all([
+    Goal.create({
+      category: "Walking",
+      targetMinutes: 60,
+      frequency: "Daily",
+      date: daysAgo(0),
+      userId: alice.id,
+    }),
+    Goal.create({
+      category: "App Development",
+      targetMinutes: 120,
+      frequency: "Weekdays",
+      userId: bob.id,
+    }),
+    Goal.create({
+      category: "Reading",
+      targetMinutes: 45,
+      frequency: "One-Time",
+      date: daysAgo(2),
+      userId: alice.id,
+    }),
+  ]);
 
   console.log(`✅ Seeded 2 users and 5 days of sleep/food/steps data each`);
 }
