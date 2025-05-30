@@ -293,6 +293,8 @@ export default function EnterGoals({ route }) {
     </Picker>
   );
 
+  console.log("HEY!!!!");
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Enter a New Goal</Text>

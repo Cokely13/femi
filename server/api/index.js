@@ -8,6 +8,7 @@ router.use("/foods", require("./foods"));
 router.use("/sleeps", require("./sleeps"));
 router.use("/goals", require("./goals"));
 router.use("/goalratings", require("./goalratings"));
+router.use("/goalprogress", require("./goalprogress"));
 
 // 404 handler for undefined API routes
 router.use((req, res, next) => {

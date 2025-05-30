@@ -12,6 +12,7 @@ import SleepScreen from "./app/screen/SleepScreen";
 import EnterInfoScreen from "./app/screen/EnterInfoScreen";
 import EnterGoals from "./app/screen/EnterGoals"; //
 import TodayGoals from "./app/screen/TodayGoals";
+import GoalTimerScreen from "./app/screen/GoalTimerScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="TodayGoals" component={TodayGoals} />
+        <Stack.Screen name="GoalTimer" component={GoalTimerScreen} />
         <Stack.Screen name="Steps" component={StepsScreen} />
         <Stack.Screen name="Food" component={FoodScreen} />
         <Stack.Screen name="Sleep" component={SleepScreen} />

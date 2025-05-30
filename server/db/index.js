@@ -8,6 +8,7 @@ const Food = require("./models/Food");
 const User = require("./models/User");
 const Goal = require("./models/Goal");
 const GoalRating = require("./models/GoalRating");
+const GoalProgress = require("./models/GoalProgress");
 
 //associations could go here!
 User.hasMany(Step);
@@ -27,6 +28,12 @@ GoalRating.belongsTo(User);
 Goal.hasMany(GoalRating);
 GoalRating.belongsTo(Goal);
 
+GoalProgress.belongsTo(User);
+User.hasMany(GoalProgress);
+
+GoalProgress.belongsTo(Goal);
+Goal.hasMany(GoalProgress);
+
 module.exports = {
   db,
   models: {
@@ -36,5 +43,6 @@ module.exports = {
     User,
     Goal,
     GoalRating,
+    GoalProgress,
   },
 };
